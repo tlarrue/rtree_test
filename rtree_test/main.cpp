@@ -20,7 +20,7 @@ int main(int argc, const char * argv[]) {
     // vector of T[]* arrays
     // array = [minX, maxX, minY, maxY]
     std::vector<void*> mbrs_;
-    /*
+    
     double testData[] = {
         1.14004e-10, 2.0011e+13, 3.55049e-08, 2.01859e+13,
         3.55049e-08, 2.01859e+13, 7.87759e-07, 2.1504e+13,
@@ -46,12 +46,14 @@ int main(int argc, const char * argv[]) {
         7.39005, 1.99375e+13, 10.4439, 2.13274e+13,
         10.4439, 2.13274e+13, 14.058, 2.07146e+13,
         14.058, 2.07146e+13, 19.4674, 1.93067e+13};
-    */
+    
+    /*
     double testData[] = {
         0., 10.0, 0., 10.0,
         0., 5.0, 0., 5.0,
         -10.0, -1.0, -10.0, -1.0
     };
+     */
     /*
     double testData[] = {
         0, 4.89125e-322, 0, 4.89125e-322,
@@ -87,7 +89,7 @@ int main(int argc, const char * argv[]) {
     
     // perform intersect query
     double subarray[] = {
-        0.0, 15.0, 0.0, 15.0
+        0.0001, 20.0, 0.0001, 20.0
     };
     
     std::vector<int64_t> search_tile_candidates_;

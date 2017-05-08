@@ -89,9 +89,6 @@ int MbrIndex::intersectQuery(const double* subarray, std::vector<int64_t> &resul
  */
 void MbrIndex::build2d(std::vector<void*> &mbrs){
     
-    point2d minPt;
-    point2d maxPt;
-    
     std::vector<value2d> pairs;
     pairs.resize(mbrs.size());
     
@@ -100,15 +97,8 @@ void MbrIndex::build2d(std::vector<void*> &mbrs){
         
         const double* mbr = static_cast<const double*>(mbrs[i]);
         
-        minPt.x = mbr[0];
-        maxPt.x = mbr[1];
-        
-        minPt.y = mbr[2];
-        maxPt.y = mbr[3];
-
-        box2d b = box2d(minPt, maxPt);
+        box2d b = box2d(point2d(mbr[0], mbr[2]), point2d(mbr[1], mbr[3]));
         pairs[i] = std::make_pair(b,i);
-        
     }
 
     pack_rtree2d rtree(pairs);
@@ -120,26 +110,15 @@ void MbrIndex::build2d(std::vector<void*> &mbrs){
  */
 void MbrIndex::build3d(std::vector<void*> &mbrs){
     
-    point3d minPt;
-    point3d maxPt;
-    
     std::vector<value3d> pairs;
     pairs.resize(mbrs.size());
     
+    // MBR = [minX, minY, maxX, maxY, minZ, maxZ]
     for (unsigned long i=0; i<mbrs.size(); i++){
         
         const double* mbr = static_cast<const double*>(mbrs[i]);
-        
-        minPt.x = mbr[0];
-        maxPt.x = mbr[1];
-        
-        minPt.y = mbr[2];
-        maxPt.y = mbr[3];
-        
-        minPt.z = mbr[4];
-        maxPt.z = mbr[5];
-        
-        box3d b = box3d(minPt, maxPt);
+
+        box3d b = box3d(point3d(mbr[0], mbr[2], mbr[4]), point3d(mbr[1], mbr[3], mbr[5]));
         pairs[i] = std::make_pair(b,i);
     }
     
@@ -153,16 +132,7 @@ void MbrIndex::build3d(std::vector<void*> &mbrs){
 void MbrIndex::intersect2d(const double* subarray, std::vector<int64_t> &result){
     
     //convert subarray to box to use boost functions
-    point2d minPt;
-    point2d maxPt;
-    
-    minPt.x = subarray[0];
-    maxPt.x = subarray[1];
-    
-    minPt.y = subarray[2];
-    maxPt.y = subarray[3];
-
-    box2d query_box(minPt, maxPt);
+    box2d query_box(point2d(subarray[0], subarray[2]), point2d(subarray[1], subarray[3]));
     std::vector<value2d> q;
 
     rtree2d_.query(bgi::intersects(query_box), std::back_inserter(q));
@@ -176,21 +146,9 @@ void MbrIndex::intersect2d(const double* subarray, std::vector<int64_t> &result)
  Perform Intersect Query with 3d coordinates
  */
 void MbrIndex::intersect3d(const double* subarray, std::vector<int64_t> &result){
-    
+
     //convert subarray to box to use boost functions
-    point3d minPt;
-    point3d maxPt;
-    
-    minPt.x = subarray[0];
-    maxPt.x = subarray[1];
-    
-    minPt.y = subarray[2];
-    maxPt.y = subarray[3];
-    
-    minPt.y = subarray[4];
-    maxPt.y = subarray[5];
-    
-    box3d query_box(minPt, maxPt);
+    box3d query_box(point3d(subarray[0], subarray[2], subarray[4]), point3d(subarray[1], subarray[3], subarray[5]));
     std::vector<value3d> q;
     
     rtree3d_.query(bgi::intersects(query_box), std::back_inserter(q));
